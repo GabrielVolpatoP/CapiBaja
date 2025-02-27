@@ -29,7 +29,7 @@ SD_Card Card;
 #define pinTx 8          // Pino Lora
 unsigned long previousMillis = 0;
 
-String msg;
+//String msg;
 
 // Definições do display (exemplo para I2C)
 
