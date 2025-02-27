@@ -97,7 +97,12 @@ void displayTask(void *pvParameters) {
     SensorData sensorData;
     if (xQueueReceive(dataQueue, &sensorData, portMAX_DELAY) == pdTRUE) {
       // Construção da tela
+	
+	// _______________ Tela __________________
 
+      Tela.ExecutarTela();
+
+    // _______________ Tela __________________
 
     }
   }
