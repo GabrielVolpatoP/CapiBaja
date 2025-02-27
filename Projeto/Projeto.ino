@@ -29,7 +29,7 @@ SD_Card Card;
 #define pinTx 8          // Pino Lora
 unsigned long previousMillis = 0;
 
-String msg;
+//String msg;
 
 // Definições do display (exemplo para I2C)
 
@@ -98,11 +98,6 @@ void displayTask(void *pvParameters) {
     if (xQueueReceive(dataQueue, &sensorData, portMAX_DELAY) == pdTRUE) {
       // Construção da tela
 
-      // _______________ Tela __________________
-
-      Tela.ExecutarTela();
-
-      // _______________ Tela __________________
 
     }
   }
