@@ -14,14 +14,6 @@ HardwareSerial lora(1); // Usa UART1 do ESP32
 
 Tela_Draw Tela;
 
-// SD Card -
-#include <SD_Card.h>
-#include <FS.h>
-#include <SD.h>
-#include <SPI.h>
-#include "sd_defines.h"
-SD_Card Card;
-
 //Variaveis para Lora
 //Pinos Lora
 #define pinRx 7
@@ -50,9 +42,6 @@ void setup() {
   // Inicializando o display
   Tela.setupTela(); // Inicializa o display
 
-  // Inicializando o SD Card
-  Card.setup();
-
   // Criando a fila
   dataQueue = xQueueCreate(10, sizeof(SensorData));
 
@@ -75,12 +64,6 @@ void receiverTask(void *pvParameters) {
     // Enviar dados para a fila
     xQueueSend(dataQueue, &sensorData, portMAX_DELAY);
 
-    // _______________ SDCard ______________________________
-
-    Card.armazenamento_Geral(SD);
-
-    // _______________ SDCard ______________________________
-
     String data = "OMELHORBAJA, " + String(sensorData.low_gas) + ", " + String(sensorData.high_gas) + ", " + String(sensorData.farol) + ", " + String(sensorData.batteryLevel) + ", " + String(sensorData.conct_LAN) + ", " + String(sensorData.temperatura_cvt) + ", " + String(sensorData.velocidade) + ", " + String(sensorData.odometro);
     if(millis() - previousMillis >= 1100){
       previousMillis = millis();
@@ -99,8 +82,6 @@ void displayTask(void *pvParameters) {
 
       // _______________ Tela ______________________________ 
 
-      Tela.LimparTela();
-      Tela.tela_principal();
       Tela.ExecutarTela();
 
       // _______________ Tela ______________________________
