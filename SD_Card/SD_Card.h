@@ -13,7 +13,6 @@
 
 class SD_Card {
 public:
-	
 	void setup();
 	void apagando_Diretorio(fs::FS &fs, const char * path);
 	void armazenamento_Geral(fs::FS &fs);
