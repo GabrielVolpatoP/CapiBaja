@@ -1,3 +1,4 @@
+!!!!
 As pastas "DrawTela" e "SD_Card" devem estar na pasta junto as outras bibliotecas
 o esquema abaixo mostra a posição qual devem se encontrar:
 
@@ -12,3 +13,5 @@ C:\Users\NameUser\Documents
                                 │── SD_Card.h
                                 │── SD_Card.cpp
                                 │── examples/
+
+"Projeto/Projeto.ino", podem estar em qualquer lugar do computador 
