@@ -1,10 +1,6 @@
-// Dois nucleos
-#include <Dual_Nucle.h>
-Dual_Nucle Dual;
-
-#include <iostream>             // Dados Binarios
-#include <HardwareSerial.h>     // Comunicação Lora
-HardwareSerial lora(1);         // Usa UART1 do ESP32
+#include <iostream>          // Dados Binarios
+#include <HardwareSerial.h>  // Comunicação Lora
+HardwareSerial lora(1);      // Usa UART1 do ESP32
 
 // <tela>
 #include <Tela_Draw.h>
@@ -18,6 +14,10 @@ SD_Card Card;
 #define pinRx 7  // Pino Lora
 #define pinTx 8  // Pino Lora
 unsigned long previousMillis = 0;
+
+// <Duplo Nucleo>
+#include <Dual_Nucle.h>
+Dual_Nucle Dual;
 
 // Fila para passar dados entre as tarefas /(?)
 QueueHandle_t dataQueue;
@@ -44,8 +44,8 @@ void setup() {
   dataQueue = Dual.criarFila(10, sizeof(SensorData));
 
   // Criando as tarefas
-  xTaskCreatePinnedToCore(receiverTask, "Receiver", 2048, NULL, 1, NULL, 0);  // Núcleo 0
-  xTaskCreatePinnedToCore(displayTask, "Display", 2048, NULL, 1, NULL, 1);    // Núcleo 1
+  Dual.criarTarefa(receiverTask, "Receiver", 2048, NULL, 1, NULL, 0);  // Núcleo 0
+  Dual.criarTarefa(displayTask, "Display", 2048, NULL, 1, NULL, 1);    // Núcleo 1
 }
 // Tarefa para receber dados
 void receiverTask(void *pvParameters) {
@@ -59,20 +59,17 @@ void receiverTask(void *pvParameters) {
     sensorData.odometro = random(300, 3000);       // Valore Aleatorios para variavel
 
     // Enviar dados para a fila
-    xQueueSend(dataQueue, &sensorData, portMAX_DELAY);
+    Dual.enviarFila(dataQueue, &sensorData);
 
-    // _______________ SDCard ____________________
-
+    // ____ SDCard _____
     Card.criando_Arquivo(SD, "/", 0);
-
-    // _______________ SDCard ____________________
 
     String data = "OMELHORBAJA, " + String(sensorData.low_gas) + ", " + String(sensorData.high_gas) + ", " + String(sensorData.farol) + ", " + String(sensorData.batteryLevel) + ", " + String(sensorData.conct_LAN) + ", " + String(sensorData.temperatura_cvt) + ", " + String(sensorData.velocidade) + ", " + String(sensorData.odometro);
     if (millis() - previousMillis >= 1100) {
       previousMillis = millis();
       lora.print(data);
     }
-    vTaskDelay(100 / portTICK_PERIOD_MS);  // Espera 1 segundo
+    Dual.delay(100 / portTICK_PERIOD_MS);  // Espera 1 segundo
   }
 }
 
@@ -80,14 +77,11 @@ void receiverTask(void *pvParameters) {
 void displayTask(void *pvParameters) {
   while (true) {
     SensorData sensorData;
-    if (xQueueReceive(dataQueue, &sensorData, portMAX_DELAY) == pdTRUE) {
+    if (Dual.receberFila(dataQueue, &sensorData) == pdTRUE) {
       // Construção da tela
 
-      // _______________ Tela __________________
-
+      // ___ Tela ___
       Tela.ExecutarTela();
-
-      // _______________ Tela __________________
     }
   }
 }
