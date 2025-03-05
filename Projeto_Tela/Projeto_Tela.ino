@@ -1,7 +1,7 @@
 // Dois nucleos
-#include <freertos/FreeRTOS.h>  // Dual Tela
-#include <freertos/task.h>      // Dual Tela
-#include <freertos/queue.h>     // Dual Tela
+#include <Dual_Nucle.h>
+Dual_Nucle Dual;
+
 #include <iostream>             // Dados Binarios
 #include <HardwareSerial.h>     // Comunicação Lora
 HardwareSerial lora(1);         // Usa UART1 do ESP32
@@ -41,7 +41,7 @@ void setup() {
   Card.setup();
 
   // Criando a fila
-  dataQueue = xQueueCreate(10, sizeof(SensorData));
+  dataQueue = Dual.criarFila(10, sizeof(SensorData));
 
   // Criando as tarefas
   xTaskCreatePinnedToCore(receiverTask, "Receiver", 2048, NULL, 1, NULL, 0);  // Núcleo 0
