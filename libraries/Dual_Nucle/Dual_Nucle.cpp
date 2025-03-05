@@ -4,7 +4,7 @@
 
 // ------------------------------------------------------------
 
-void Dual_Nucle::criarTarefa(TaskFunction_t receiverTask, const char * receiver, UBaseType_t sizePilha, void * ponteiro, UBaseType_t propriedade, TaskHandle_t handleTask, BaseType_t nucleo){
+void Dual_Nucle::criarTarefa(TaskFunction_t receiverTask, const char * receiver, UBaseType_t sizePilha, void * ponteiro, UBaseType_t propriedade, tskTaskControlBlock** handleTask, BaseType_t nucleo){
 	xTaskCreatePinnedToCore(receiverTask, receiver, sizePilha, ponteiro, propriedade, handleTask, nucleo); 
 }
 
@@ -29,5 +29,5 @@ void Dual_Nucle::enviarFila(QueueHandle_t dadosFila, void * ponteiro){
 // ------------------------------------------------------------
 
 bool Dual_Nucle::receberFila(QueueHandle_t handleFila, void * ponteiro){
-	xQueueReceive(handleFila, &ponteiro, portMAX_DELAY)
+	xQueueReceive(handleFila, &ponteiro, portMAX_DELAY);
 }
