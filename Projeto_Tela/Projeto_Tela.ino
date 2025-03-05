@@ -63,7 +63,7 @@ void receiverTask(void *pvParameters) {
 
     // _______________ SDCard ____________________
 
-    Card.criando_Arquivo(SD, );
+    Card.criando_Arquivo(SD, "/", 0);
 
     // _______________ SDCard ____________________
 
