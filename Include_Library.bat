@@ -4,8 +4,8 @@ setlocal
 :: Pega o nome do usuário atual
 set "usuario=%USERNAME%"
 
-:: Caminho da pasta a ser copiada (substitua com o caminho correto)
-set "pasta_origem=E:\Download\CapiBaja-main\libraries"
+:: Caminho da pasta a ser copiada está localizado (diretório do script .bat)
+set "pasta_origem=%~dp0libraries"
 
 :: Caminho de destino para onde a pasta será copiada (pasta "Documents\libraries" do usuário)
 set "destino=C:\Users\%usuario%\OneDrive\Documentos\Arduino\libraries"
