@@ -1,29 +1,20 @@
-// Dois nucleos
-#include <freertos/FreeRTOS.h>  // Dual Tela
-#include <freertos/task.h>      // Dual Tela
-#include <freertos/queue.h>     // Dual Tela
-#include <iostream>             // Dados Binarios
-#include <HardwareSerial.h>     // Comunicação Lora
-HardwareSerial lora(1);         // Usa UART1 do ESP32
+#include <iostream>          // Dados Binarios
+#include <Tela_Draw.h>       // <tela>
+#include <SD_Card.h>         // <SdCard>
+#include <Dual_Nucle.h>      // <Duplo Nucleo>
+#include <HardwareSerial.h>  // Comunicação Lora
 
-// <tela>
-#include <Tela_Draw.h>
-Tela_Draw Tela;
+#define pinRx 7           // Pino Lora
+#define pinTx 8           // Pino Lora
+Tela_Draw Tela;           // Classe <Tela>
+SD_Card Card;             // Classe <Card>
+Dual_Nucle Dual;          // Classe <Dual>
+HardwareSerial lora(1);   // Usa UART1 do ESP32
+QueueHandle_t dataQueue;  // Fila para passar dados entre as tarefas
 
-// <SdCard>
-#include <SD_Card.h>
-SD_Card Card;
-
-// <Lora>
-#define pinRx 7  // Pino Lora
-#define pinTx 8  // Pino Lora
 unsigned long previousMillis = 0;
 
-// Fila para passar dados entre as tarefas /(?)
-QueueHandle_t dataQueue;
-
-// Estrutura para os dados agregados
-struct SensorData {
+struct SensorData {  // Estrutura para os dados agregados
   float latitude, longitude;
   uint8_t temperatura_motor, temperatura_cvt, velocidade, odometro, hora, minuto, mes, ano;
   uint16_t altitude, rpm_motor;
@@ -31,24 +22,17 @@ struct SensorData {
 };
 
 void setup() {
-  Serial.begin(115200);
-  lora.begin(115200, SERIAL_8N1, pinRx, pinTx);
+  Serial.begin(115200);                          // Serial deplay
+  lora.begin(115200, SERIAL_8N1, pinRx, pinTx);  // Inicializa Lora
+  Tela.setupTela();                              // Inicializa o display
+  Card.setup();                                  // Inicializando o SDCard
 
-  // Inicializando o display
-  Tela.setupTela();  // Inicializa o display
-
-  // Inicializando o SD Card
-  Card.setup();
-
-  // Criando a fila
-  dataQueue = xQueueCreate(10, sizeof(SensorData));
-
-  // Criando as tarefas
-  xTaskCreatePinnedToCore(receiverTask, "Receiver", 2048, NULL, 1, NULL, 0);  // Núcleo 0
-  xTaskCreatePinnedToCore(displayTask, "Display", 2048, NULL, 1, NULL, 1);    // Núcleo 1
+  dataQueue = Dual.criarFila(10, sizeof(SensorData));                  // Criando a fila <Dual>
+  Dual.criarTarefa(receiverTask, "Receiver", 2048, NULL, 1, NULL, 0);  // Núcleo 0
+  Dual.criarTarefa(displayTask, "Display", 2048, NULL, 1, NULL, 1);    // Núcleo 1
 }
-// Tarefa para receber dados
-void receiverTask(void *pvParameters) {
+
+void receiverTask(void *pvParameters) {  // Tarefa para receber dados
   while (true) {
     SensorData sensorData;
 
@@ -58,21 +42,17 @@ void receiverTask(void *pvParameters) {
     sensorData.velocidade = random(5, 45);         // Valore Aleatorios para variavel
     sensorData.odometro = random(300, 3000);       // Valore Aleatorios para variavel
 
-    // Enviar dados para a fila
-    xQueueSend(dataQueue, &sensorData, portMAX_DELAY);
+    Dual.enviarFila(dataQueue, &sensorData);  // Enviar dados para a fila
 
-    // _______________ SDCard ____________________
-
+    // ____ SDCard _____
     Card.criando_Arquivo(SD, "/", 0);
-
-    // _______________ SDCard ____________________
 
     String data = "OMELHORBAJA, " + String(sensorData.low_gas) + ", " + String(sensorData.high_gas) + ", " + String(sensorData.farol) + ", " + String(sensorData.batteryLevel) + ", " + String(sensorData.conct_LAN) + ", " + String(sensorData.temperatura_cvt) + ", " + String(sensorData.velocidade) + ", " + String(sensorData.odometro);
     if (millis() - previousMillis >= 1100) {
       previousMillis = millis();
       lora.print(data);
     }
-    vTaskDelay(100 / portTICK_PERIOD_MS);  // Espera 1 segundo
+    Dual.delay(100 / portTICK_PERIOD_MS);  // Espera 1 segundo
   }
 }
 
@@ -80,18 +60,13 @@ void receiverTask(void *pvParameters) {
 void displayTask(void *pvParameters) {
   while (true) {
     SensorData sensorData;
-    if (xQueueReceive(dataQueue, &sensorData, portMAX_DELAY) == pdTRUE) {
-      // Construção da tela
+    if (Dual.receberFila(dataQueue, &sensorData) == pdTRUE) {
 
-      // _______________ Tela __________________
-
-      Tela.ExecutarTela();
-
-      // _______________ Tela __________________
+      // ___ Tela ___
+      Tela.ExecutarTela();  // Construção da tela
     }
   }
 }
-
 
 void loop() {
   // O loop fica vazio, já que estamos usando FreeRTOS
