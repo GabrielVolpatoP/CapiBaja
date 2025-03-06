@@ -12,7 +12,7 @@
 class Dual_Nucle {
 public:
 	
-	void criarTarefa(TaskFunction_t receiverTask, const char * receiver, UBaseType_t sizePilha, void * ponteiro, UBaseType_t propriedade, tskTaskControlBlock** handleTask, BaseType_t nucleo);
+	void criarTarefa(TaskFunction_t receiverTask, const char * receiver, BaseType_t nucleo);
 	QueueHandle_t criarFila(int sizeFila, int sizeStruct);
 	void delay(int numerador);
 	void enviarFila(QueueHandle_t dadosFila, void * ponteiro);

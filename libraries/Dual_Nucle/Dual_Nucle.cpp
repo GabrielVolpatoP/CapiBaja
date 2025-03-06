@@ -6,8 +6,8 @@
 
 
 // Criando as tarefas <Dual>
-void Dual_Nucle::criarTarefa(TaskFunction_t receiverTask, const char * receiver, UBaseType_t sizePilha, void * ponteiro, UBaseType_t propriedade, tskTaskControlBlock** handleTask, BaseType_t nucleo){
-	xTaskCreatePinnedToCore(receiverTask, receiver, sizePilha, ponteiro, propriedade, handleTask, nucleo); 
+void Dual_Nucle::criarTarefa(TaskFunction_t receiverTask, const char * receiver, BaseType_t nucleo){
+	xTaskCreatePinnedToCore(receiverTask, receiver,  2048, NULL, 1, NULL, nucleo); 
 }
 
 // ------------------------------------------------------------

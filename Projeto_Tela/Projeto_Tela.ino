@@ -27,9 +27,9 @@ void setup() {
   Tela.setupTela();                              // Inicializa o display
   Card.setup();                                  // Inicializando o SDCard
 
-  dataQueue = Dual.criarFila(10, sizeof(SensorData));                  // Criando a fila <Dual>
-  Dual.criarTarefa(receiverTask, "Receiver", 2048, NULL, 1, NULL, 0);  // Núcleo 0
-  Dual.criarTarefa(displayTask, "Display", 2048, NULL, 1, NULL, 1);    // Núcleo 1
+  dataQueue = Dual.criarFila(10, sizeof(SensorData));  // Criando a fila <Dual>
+  Dual.criarTarefa(receiverTask, "Receiver", 0);       // Núcleo 0
+  Dual.criarTarefa(displayTask, "Display", 1);         // Núcleo 1
 }
 
 void receiverTask(void *pvParameters) {  // Tarefa para receber dados
