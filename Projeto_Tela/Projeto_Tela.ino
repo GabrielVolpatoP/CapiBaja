@@ -51,9 +51,10 @@ void receiverTask(void *pvParameters) {
 
 void collectSensorData(SensorData &sensorData) {
     sensorData.temperatura_motor = random(9, 55);
-    sensorData.rpm_motor = random(9, 55);
+    sensorData.temperatura_cvt = random(9, 55);
     sensorData.velocidade = random(5, 45);
     sensorData.odometro = random(300, 3000);
+    sensorData.rpm_motor = random(500, 9000);
 }
 
 void writeDataToSDCard(const SensorData &sensorData) {
