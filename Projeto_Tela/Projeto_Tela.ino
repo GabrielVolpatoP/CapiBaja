@@ -1,73 +1,88 @@
-#include <iostream>          // Dados Binarios
-#include <Tela_Draw.h>       // <tela>
-#include <SD_Card.h>         // <SdCard>
-#include <Dual_Nucle.h>      // <Duplo Nucleo>
-#include <HardwareSerial.h>  // Comunicação Lora
+#include <iostream>
+#include <Tela_Draw.h>
+#include <SD_Card.h>
+#include <Dual_Nucle.h>
+#include <HardwareSerial.h>
 
-#define pinRx 7           // Pino Lora
-#define pinTx 8           // Pino Lora
-Tela_Draw Tela;           // Classe <Tela>
-SD_Card Card;             // Classe <Card>
-Dual_Nucle Dual;          // Classe <Dual>
-HardwareSerial lora(1);   // Usa UART1 do ESP32
-QueueHandle_t dataQueue;  // Fila para passar dados entre as tarefas
+#define PIN_RX 7
+#define PIN_TX 8
+#define QUEUE_SIZE 10
+#define TASK_DELAY 100
+#define LORA_BAUD_RATE 115200
+#define SERIAL_BAUD_RATE 115200
+#define DATA_SEND_INTERVAL 1100
+
+Tela_Draw Tela;
+SD_Card Card;
+Dual_Nucle Dual;
+HardwareSerial lora(1);
+QueueHandle_t dataQueue;
 
 unsigned long previousMillis = 0;
 
-struct SensorData {  // Estrutura para os dados agregados
-  float latitude, longitude;
-  uint8_t temperatura_motor, temperatura_cvt, velocidade, odometro, hora, minuto, mes, ano;
-  uint16_t altitude, rpm_motor;
-  bool batteryLevel, farol, conct_LAN, low_gas, high_gas;
+struct SensorData {
+    float latitude, longitude;
+    uint8_t temperatura_motor, temperatura_cvt, velocidade, odometro, hora, minuto, mes, ano;
+    uint16_t altitude, rpm_motor;
+    bool batteryLevel, farol, conct_LAN, low_gas, high_gas;
 };
 
 void setup() {
-  Serial.begin(115200);                          // Serial deplay
-  lora.begin(115200, SERIAL_8N1, pinRx, pinTx);  // Inicializa Lora
-  Tela.setupTela();                              // Inicializa o display
-  Card.setup();                                  // Inicializando o SDCard
-
-  dataQueue = Dual.criarFila(10, sizeof(SensorData));  // Criando a fila <Dual>
-  Dual.criarTarefa(receiverTask, "Receiver", 0);       // Núcleo 0
-  Dual.criarTarefa(displayTask, "Display", 1);         // Núcleo 1
+    Serial.begin(SERIAL_BAUD_RATE);
+    lora.begin(LORA_BAUD_RATE, SERIAL_8N1, PIN_RX, PIN_TX);
+    Tela.setupTela();
+    Card.setup();
+    dataQueue = Dual.criarFila(QUEUE_SIZE, sizeof(SensorData));
+    Dual.criarTarefa(receiverTask, "Receiver", 0);
+    Dual.criarTarefa(displayTask, "Display", 1);
 }
 
-void receiverTask(void *pvParameters) {  // Tarefa para receber dados
-  while (true) {
+void receiverTask(void *pvParameters) {
     SensorData sensorData;
 
-    // Simulando a recepção de dados
-    sensorData.temperatura_motor = random(9, 55);  // Valore Aleatorios para variavel
-    sensorData.rpm_motor = random(9, 55);          // Valore Aleatorios para variavel
-    sensorData.velocidade = random(5, 45);         // Valore Aleatorios para variavel
-    sensorData.odometro = random(300, 3000);       // Valore Aleatorios para variavel
+    while (true) {
+        collectSensorData(sensorData);
+        Dual.enviarFila(dataQueue, &sensorData);
+        writeDataToSDCard(sensorData);
+        sendDataToLora(sensorData);
+        Dual.delay(TASK_DELAY / portTICK_PERIOD_MS);
+    }
+}
 
-    Dual.enviarFila(dataQueue, &sensorData);  // Enviar dados para a fila
+void collectSensorData(SensorData &sensorData) {
+    sensorData.temperatura_motor = random(9, 55);
+    sensorData.rpm_motor = random(9, 55);
+    sensorData.velocidade = random(5, 45);
+    sensorData.odometro = random(300, 3000);
+}
 
-    // ____ SDCard _____
+void writeDataToSDCard(const SensorData &sensorData) {
     Card.criando_Arquivo(SD, "/", 0);
-
-    String data = "OMELHORBAJA, " + String(sensorData.low_gas) + ", " + String(sensorData.high_gas) + ", " + String(sensorData.farol) + ", " + String(sensorData.batteryLevel) + ", " + String(sensorData.conct_LAN) + ", " + String(sensorData.temperatura_cvt) + ", " + String(sensorData.velocidade) + ", " + String(sensorData.odometro);
-    if (millis() - previousMillis >= 1100) {
-      previousMillis = millis();
-      lora.print(data);
-    }
-    Dual.delay(100 / portTICK_PERIOD_MS);  // Espera 1 segundo
-  }
+    // Adicione lógica para escrever os dados no SDCard
 }
 
-// Tarefa para exibir dados
-void displayTask(void *pvParameters) {
-  while (true) {
-    SensorData sensorData;
-    if (Dual.receberFila(dataQueue, &sensorData) == pdTRUE) {
-
-      // ___ Tela ___
-      Tela.ExecutarTela();  // Construção da tela
+void sendDataToLora(const SensorData &sensorData) {
+    if (millis() - previousMillis >= DATA_SEND_INTERVAL) {
+        previousMillis = millis();
+        char data[128];
+        snprintf(data, sizeof(data), "OMELHORBAJA, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d",
+                 sensorData.low_gas, sensorData.high_gas, sensorData.farol, sensorData.batteryLevel,
+                 sensorData.temperatura_motor, sensorData.rpm_motor, sensorData.velocidade, sensorData.odometro,
+                 sensorData.hora, sensorData.minuto, sensorData.mes, sensorData.ano);
+        lora.print(data);
     }
-  }
+}
+
+void displayTask(void *pvParameters) {
+    SensorData sensorData;
+
+    while (true) {
+        if (Dual.receberFila(dataQueue, &sensorData) == pdTRUE) {
+            Tela.ExecutarTela();
+        }
+    }
 }
 
 void loop() {
-  // O loop fica vazio, já que estamos usando FreeRTOS
+    // O loop fica vazio, já que estamos usando FreeRTOS
 }
