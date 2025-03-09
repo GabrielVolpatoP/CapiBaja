@@ -32,7 +32,7 @@ Este projeto visa desenvolver um sistema de monitoramento e controle para o veí
 - ESP32
 - Módulo SD Card
 - Módulo Lora
-- Display compatível
+- Display LCD12864
 
 ## Licença
 Este projeto está licenciado sob a [MIT License](LICENSE).
@@ -42,6 +42,3 @@ Este projeto está licenciado sob a [MIT License](LICENSE).
 
 ## Contato
 Para suporte ou dúvidas, entre em contato pelo email: volpatocursin@outlook.com
-```
-
-Você pode copiar e colar esta seção no seu arquivo README.md.
