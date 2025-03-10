@@ -148,11 +148,11 @@ void Tela_Draw::gasolina() {
 // ------------------------------------------------------------
 
 void Tela_Draw::atualizacao_dados(int pos_x, int pos_y, uint8_t new_data, uint8_t old_data, const uint8_t *font) {
-  u8g2.setFont(font);
-  u8g2.setCursor(pos_x, pos_y);
-  if (new_data != old_data) {
-    u8g2.print(new_data);
-  } else {
-    u8g2.print(old_data);
-  }
+    u8g2.setFont(font);
+    u8g2.setCursor(pos_x, pos_y);
+    if (abs(new_data - old_data) >= (old_data * 0.03)) {
+        u8g2.print(new_data);
+    } else {
+        u8g2.print(old_data);
+    }
 }
