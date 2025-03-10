@@ -8,33 +8,35 @@
 <br>
 
 ```txt
-Início
-  |
-  v
-Setup
-  |
-  +-------------------+
-  |                   |
-  v                   v
-receiverTask       displayTask
-  |                   |
-  v                   v
-Coletar Dados      Receber Dados
-  |                   |
-  v                   v
-Enviar para Fila  Atualizar Tela
-  |                   |
-  v                   v
-Escrever no SD
-  |
-  v
-Enviar via LoRa
-  |
-  v
-Atraso 100ms
-  |
-  v
-Repetir
+
+    Início
+      |
+      v
+    Setup
+      |
+      +----------------------+
+      |                      |
+      v                      v
+    receiverTask          displayTask
+      |                      |
+      v                      v
+    Coletar Dados         Receber Dados
+      |                      |
+      v                      v
+    Enviar para Fila     Atualizar Tela
+      |                      |
+      v                      v
+    Escrever no SD
+      |
+      v
+    Enviar via LoRa
+      |
+      v
+    Atraso 100ms
+      |
+      v
+    Repetir
+
 ```
 
 ### Início: 
