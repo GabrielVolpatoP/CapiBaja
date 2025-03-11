@@ -1,13 +1,22 @@
 // Implementação 
 // Define como as funções trabalham e quais operações realizam.
 #include "SD_Card.h" // Importa o cabeçalho para garantir que as declarações das funções sejam reconhecidas.
-#include "SD.h" 
+#include "FS.h"
+#include "SD.h"
+#include "SPI.h"
+
+// Definição dos novos pinos SPI para o SD Card
+#define SD_SCK   14  // Clock
+#define SD_MISO  12  // Entrada de dados
+#define SD_MOSI  13  // Saída de dados
+#define SD_CS    27   // Chip Select (ajuste conforme necessário)
+#define SERIAL_BAUD_RATE 115200
 
 // ------------------------------------------------------------
 
 void SD_Card::setup(){
-  Serial.begin(115200);
-  if(!SD.begin(5)){
+  Serial.begin(SERIAL_BAUD_RATE);
+  if(!SD.begin(SD_CS)){
     Serial.println("Falha ao montar o cartão SD");
     return;
   }

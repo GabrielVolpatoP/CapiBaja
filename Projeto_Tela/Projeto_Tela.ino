@@ -4,13 +4,15 @@
 #include <Dual_Nucle.h>
 #include <HardwareSerial.h>
 
-#define PIN_RX 7
-#define PIN_TX 8
+#define PIN_RX 17 // Lora
+#define PIN_TX 16 // Lora
 #define QUEUE_SIZE 10
 #define TASK_DELAY 100
 #define LORA_BAUD_RATE 115200
 #define SERIAL_BAUD_RATE 115200
 #define DATA_SEND_INTERVAL 1100
+#define RXD2 19  // GPIO17 (RX2) - Recebe dados do LoRa 
+#define TXD2 21  // GPIO16 (TX2) - Transmite dados para o LoRa
 
 Tela_Draw Tela;
 SD_Card Card;
