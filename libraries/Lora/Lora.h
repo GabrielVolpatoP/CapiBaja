@@ -4,6 +4,7 @@
 #define Lora_H
 
 #include <HardwareSerial.h>
+#include "Sensor_Data.h"
 
 // ------------------------------------------------------------
 
@@ -11,10 +12,9 @@ class Lora {
 public:
 	
 	void setup();
-	void analiseMensagem(struct &sensorData);
-	void checagemBuffer();
-	void printMensagemTeste(struct &sensorData);	
-	void sendDataToLora(struct &sensorData);
+	void analiseMensagem(SensorData* dados);
+	void printMensagemTeste(SensorData* dados);	
+	void sendDataToLora(SensorData* dados);
 
 };
 	
