@@ -4,8 +4,8 @@
 #include <Dual_Nucle.h>
 #include <HardwareSerial.h>
 
-#define PIN_RX 7
-#define PIN_TX 8
+#define PIN_RX 17 // Lora
+#define PIN_TX 16 // Lora
 #define QUEUE_SIZE 10
 #define TASK_DELAY 100
 #define LORA_BAUD_RATE 115200
