@@ -1,6 +1,6 @@
 // Implementação 
 // Define como as funções trabalham e quais operações realizam.
-#include "SD_Card.h"
+#include "SD_Card.h" // Importa o cabeçalho para garantir que as declarações das funções sejam reconhecidas.
 #include "FS.h"
 #include "SD.h"
 #include "SPI.h"
