@@ -11,10 +11,8 @@
 #define LORA_BAUD_RATE 115200
 #define SERIAL_BAUD_RATE 115200
 #define DATA_SEND_INTERVAL 1100
-#define SD_SCK   14  // Clock
-#define SD_MISO  12  // Entrada de dados
-#define SD_MOSI  13  // Saída de dados
-#define SD_CS    27  // Chip Select (ajuste conforme necessário)
+#define RXD2 19  // GPIO17 (RX2) - Recebe dados do LoRa 
+#define TXD2 21  // GPIO16 (TX2) - Transmite dados para o LoRa
 
 Tela_Draw Tela;
 SD_Card Card;
