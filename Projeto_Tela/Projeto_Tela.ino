@@ -11,6 +11,10 @@
 #define LORA_BAUD_RATE 115200
 #define SERIAL_BAUD_RATE 115200
 #define DATA_SEND_INTERVAL 1100
+#define SD_SCK   14  // Clock
+#define SD_MISO  12  // Entrada de dados
+#define SD_MOSI  13  // Saída de dados
+#define SD_CS    27  // Chip Select (ajuste conforme necessário)
 
 Tela_Draw Tela;
 SD_Card Card;
