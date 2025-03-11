@@ -3,11 +3,17 @@
 #include "SD_Card.h" // Importa o cabeçalho para garantir que as declarações das funções sejam reconhecidas.
 #include "SD.h" 
 
+#define SD_SCK   14  // Clock
+#define SD_MISO  12  // Entrada de dados
+#define SD_MOSI  13  // Saída de dados
+#define SD_CS    27  // Chip Select (ajuste conforme necessário)
+
+
 // ------------------------------------------------------------
 
 void SD_Card::setup(){
   Serial.begin(115200);
-  if(!SD.begin(5)){
+  if(!SD.begin(SD_CS)){
     Serial.println("Falha ao montar o cartão SD");
     return;
   }
