@@ -1,4 +1,7 @@
-# Out
+## Pinagem 
+<img src="Pinagem.png" width="435" align="center">
+
+## Out
 
 ```
 Cartão SD pronto!
@@ -49,6 +52,3 @@ __
 Espaço total: 7MB
 Espaço usado: 0MB
 ```
-
-## Pinagem 
-<img src="Pinagem.png" width="335" height="308" align="right">
