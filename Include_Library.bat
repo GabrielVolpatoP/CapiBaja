@@ -8,7 +8,7 @@ set "usuario=%USERNAME%"
 set "pasta_origem=%~dp0libraries"
 
 :: Caminho de destino para onde a pasta será copiada (pasta "Documents\libraries" do usuário)
-set "destino=C:\Users\%usuario%\OneDrive\Documentos\Arduino\libraries"
+set "destino=C:\Users\%usuario%\Documents\Arduino\libraries"
 
 :: Verifica se a pasta de destino existe, e cria se necessário
 if not exist "%destino%" (
