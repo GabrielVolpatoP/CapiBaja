@@ -29,13 +29,14 @@ As bibliotecas presentes em ```"libraries"``` devem se encontrar na pasta padrã
 Este projeto visa desenvolver um sistema de monitoramento e controle para o veículo Baja SAE, utilizando um ESP32 para coletar dados de sensores, exibir informações em uma tela e armazenar dados em um cartão SD.
 
 ## Pré-requisitos
+**Geral:**
 - Arduino IDE instalado
 - ESP32
 - Módulo SD Card
 - Módulo Lora
 - Display LCD12864
-Bibliotecas:
-- [Adafruit GFX](https://github.com/adafruit/Adafruit-GFX-Library)
+  
+**Bibliotecas:**
 - [U8g2](https://github.com/olikraus/u8g2)
 
 ## Licença
