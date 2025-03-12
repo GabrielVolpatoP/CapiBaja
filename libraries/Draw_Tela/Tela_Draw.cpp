@@ -6,58 +6,54 @@ U8G2_ST7920_128X64_F_SW_SPI u8g2(U8G2_R0, /* clock=*/ 18, /* data=*/ 23, /* CS=*
 
 // ------------------------------------------------------------
 
-void Tela_Draw::setupTela() {
+void Tela_Draw::setup() {
     u8g2.begin();
+	iconsPrincipal();        // Desenha os icones de Status
+	backgrondTela();
 }
 
 // ------------------------------------------------------------
 
-void Tela_Draw::LimparTela(){
+void Tela_Draw::limparTela(){
 	u8g2.clearBuffer();
 }
 
 // ------------------------------------------------------------
 
-void Tela_Draw::ExecutarTela(){
-	u8g2.clearBuffer();
-	backgrond_tela_principal();
+void Tela_Draw::desenharTela(){
 	u8g2.sendBuffer();
 }
 
 // ------------------------------------------------------------
 
-void Tela_Draw::atulizacaoTela(uint8_t veloc_new ,uint8_t veloc_old ,uint8_t temp_new ,uint8_t temp_old ,uint8_t odom_new ,uint8_t odom_old) {
 
-  icons_principal();        // Desenha os icones de Status
+void Tela_Draw::atulizacaoTela(SensorData* sensorData) {
 
   //  Velocidade 
-  atualizacao_dados(4, 46, veloc_new, veloc_old, u8g2_font_7Segments_26x42_mn);
+  inserirVariavel(4, 46, sensorData->velocidade, sensorData->velocidade, u8g2_font_7Segments_26x42_mn);
 
   //  Temperatura 
-  atualizacao_dados(70, 18, temp_new, temp_old, u8g2_font_VCR_OSD_mu);
+  inserirVariavel(70, 18, sensorData->temperatura_cvt, sensorData->temperatura_cvt, u8g2_font_VCR_OSD_mu);
 
   //  Odometro 
-  atualizacao_dados(45, 60, odom_new, odom_old, u8g2_font_5x7_tn);
+  inserirVariavel(45, 60, sensorData->odometro, sensorData->odometro, u8g2_font_5x7_tn);
  
   // ----- Correção (Retangulo Temperatura)
-
-  u8g2.drawFrame(66, 0, 2, 20);   // "linha" horiz sup
-  u8g2.drawFrame(66, 19, 44, 2);  // "linha" vert sup
+  u8g2.drawFrame(66, 0, 2, 21);   // "linha" horiz sup - correção
 }
 
 // ------------------------------------------------------------
 
-void Tela_Draw::icons_principal() {  // Chama todos os elementos dos icones
-
-  farol();     // Chama função que printa Farol
-  draw_lora();      // Chama função que printa Lora
-  bateria();   // Chama função que printa Bateria
-  gasolina();  // Chama função que printa Gasolina
+void Tela_Draw::iconsPrincipal() {  // Chama todos os elementos dos icones
+  iconFarol();     // Chama função que printa Farol
+  iconLora();      // Chama função que printa Lora
+  iconBateria();   // Chama função que printa Bateria
+  iconGasolina();  // Chama função que printa Gasolina
 }
 
 // ------------------------------------------------------------
 
-void Tela_Draw::backgrond_tela_principal() {
+void Tela_Draw::backgrondTela() {
 
   // Temperatura - Unidade de Medida
   u8g2.setFont(u8g2_font_8bitclassic_tf);
@@ -77,20 +73,18 @@ void Tela_Draw::backgrond_tela_principal() {
   u8g2.setFont(u8g2_font_synchronizer_nbp_tf);
   u8g2.drawStr(95, 60, "Km");
 
-  // Corpo
-
+  // Corpo -----
   u8g2.drawFrame(0, 0, 111, 50);  // Box maior
 
   u8g2.drawFrame(0, 50, 111, 14);  // box inferior
   u8g2.drawFrame(111, 0, 17, 64);  // lateral
 
-  u8g2.drawFrame(66, 0, 2, 20);   // "linha" horiz sup
   u8g2.drawFrame(66, 19, 44, 2);  // "linha" vert sup
 }
 
 // ------------------------------------------------------------
 
-void Tela_Draw::farol() {
+void Tela_Draw::iconFarol() {
 
   u8g2.drawTriangle(119, 5, 119, 15, 124, 10);  // method to build a triangle. This method accepts as arguments the coordinates of each corner and the WHITE.
 
@@ -102,7 +96,7 @@ void Tela_Draw::farol() {
 
 // ------------------------------------------------------------
 
-void Tela_Draw::draw_lora() {
+void Tela_Draw::iconLora() {
 
   u8g2.drawLine(115, 20, 122, 20);  // method to create a line
   u8g2.drawPixel(114, 21);          // plot a pixel in the x,y coordinates
@@ -121,7 +115,7 @@ void Tela_Draw::draw_lora() {
 
 // ------------------------------------------------------------
 
-void Tela_Draw::bateria() {
+void Tela_Draw::iconBateria() {
 
   u8g2.drawFrame(117, 32, 4, 2);   // provides an easy way to draw a rectangle
   u8g2.drawFrame(115, 34, 8, 10);  // provides an easy way to draw a rectangle
@@ -132,7 +126,7 @@ void Tela_Draw::bateria() {
 
 // ------------------------------------------------------------
 
-void Tela_Draw::gasolina() {
+void Tela_Draw::iconGasolina() {
 
   u8g2.drawFrame(115, 50, 7, 9);    // provides an easy way to draw a rectangle
   u8g2.drawLine(114, 48, 118, 48);  // method to create a line
@@ -147,7 +141,7 @@ void Tela_Draw::gasolina() {
 
 // ------------------------------------------------------------
 
-void Tela_Draw::atualizacao_dados(int pos_x, int pos_y, uint8_t new_data, uint8_t old_data, const uint8_t *font) {
+void Tela_Draw::inserirVariavel(int pos_x, int pos_y, uint8_t new_data, uint8_t old_data, const uint8_t *font) {
     u8g2.setFont(font);
     u8g2.setCursor(pos_x, pos_y);
     if (abs(new_data - old_data) >= (old_data * 0.03)) {
