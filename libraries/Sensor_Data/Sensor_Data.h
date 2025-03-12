@@ -1,5 +1,5 @@
-#ifndef SENSORDATA_H
-#define SENSORDATA_H
+#ifndef SENSOR_DATA_H
+#define SENSOR_DATA_H
 
 struct SensorData {
     uint8_t buffer_star1, buffer_star2;
