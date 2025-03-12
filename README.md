@@ -34,6 +34,9 @@ Este projeto visa desenvolver um sistema de monitoramento e controle para o veí
 - Módulo SD Card
 - Módulo Lora
 - Display LCD12864
+Bibliotecas:
+- [Adafruit GFX](https://github.com/adafruit/Adafruit-GFX-Library)
+- [U8g2](https://github.com/olikraus/u8g2)
 
 ## Licença
 Este projeto está licenciado sob a [MIT License](LICENSE).
