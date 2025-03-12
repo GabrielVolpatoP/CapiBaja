@@ -17,8 +17,10 @@ As bibliotecas presentes em ```"libraries"``` devem se encontrar na pasta padrã
   │── libraries/
         │
         │── Draw_Tela/...
-        │── SD_Card/...
         │── Dual_Nucle/...
+        │── Lora/...
+        │── SD_Card/...
+        │── Sensor_Data/...
 ```
 
 <br>
@@ -39,7 +41,8 @@ Este projeto visa desenvolver um sistema de monitoramento e controle para o veí
 Este projeto está licenciado sob a [MIT License](LICENSE).
 
 ## Autores
-- Gabriel Volpato
+- Gabriel Volpato 
 
 ## Contato
-Para suporte ou dúvidas, entre em contato pelo email: volpatocursin@outlook.com
+Para suporte ou dúvidas, entre em contato pelo email: volpatocursin@outlook.com 
+<img src="https://github.com/GabrielVolpatoP/GabrielVolpatoP/blob/main/imagens/assinatura-icon.png?raw=true" alt="Icon Usuario" align="right"  width="60">
