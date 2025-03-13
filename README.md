@@ -26,7 +26,7 @@ As bibliotecas presentes em ```"libraries"``` devem se encontrar na pasta padrã
 *"Projeto/Projeto.ino", podem estar em qualquer lugar do computador*
 
 ## Descrição do Projeto
-Este projeto visa desenvolver um sistema de monitoramento e controle para o veículo Baja SAE, utilizando um ESP32 para coletar dados de sensores, exibir informações em uma tela e armazenar dados em um cartão SD.
+Este projeto visa desenvolver um sistema de monitoramento e controle para o veículo Baja SAE UEM - [CapiBaja](https://www.instagram.com/capibaja), utilizando um ESP32 para coletar dados de sensores, exibir informações em uma tela e armazenar dados em um cartão SD.
 
 ## Pré-requisitos
 **Geral:**
