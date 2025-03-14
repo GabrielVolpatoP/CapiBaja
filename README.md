@@ -5,7 +5,7 @@
 </header>
 
 > [!IMPORTANT]\
-> **Faça download da versão main e execute o arquivo**  ```Include_Library.bat``` **ele vai incluir as bliotecas no Arduino IDE**
+> **Faça download da versão desejada e execute o arquivo**  ```Include_Library.bat``` **ele vai incluir as bliotecas no Arduino IDE**
 
 <br>
 
