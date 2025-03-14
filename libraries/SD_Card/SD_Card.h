@@ -3,27 +3,25 @@
 #ifndef SD_Card_H
 #define SD_Card_H
 
-#include <Arduino.h>
 #include <FS.h>
 #include <SD.h>
 #include <SPI.h>
-#include "sd_defines.h"
 
 // ------------------------------------------------------------
 
 class SD_Card {
 public:
 	void setup();
-	void apagando_Diretorio(fs::FS &fs, const char * path);
-	void armazenamento_Geral(fs::FS &fs);
-	void criando_Arquivo(fs::FS &fs, const char * path, const char * message);
-	void criando_Diretorio(fs::FS &fs, const char * path);
-	void deletando_arquivo(fs::FS &fs, const char * path);
-	void incrementando_Arquivo(fs::FS &fs, const char * path, const char * message);
-	void lendo_Arquivo(fs::FS &fs, const char * path);
-	void lista_Diretorio(fs::FS &fs, const char *dirname, uint8_t levels);
-	void renomeando_Arquivo(fs::FS &fs, const char * path1, const char * path2);
-	void teste_Geral(fs::FS &fs, const char * path);
+	void apagando_Diretorio(const char * path);
+	void armazenamento_Geral();
+	void criando_Arquivo(const char * path, const char * message);
+	void criando_Diretorio(const char * path);
+	void deletando_arquivo(const char * path);
+	void incrementando_Arquivo(const char * path, const char * message);
+	void lendo_Arquivo(const char * path);
+	void lista_Diretorio(const char *dirname, uint8_t levels);
+	void renomeando_Arquivo(const char * path1, const char * path2);
+	void teste_Geral(const char * path);
 	
 };
 

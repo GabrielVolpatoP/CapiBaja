@@ -1,46 +1,66 @@
 // Implementação 
 // Define como as funções trabalham e quais operações realizam.
 #include "SD_Card.h" // Importa o cabeçalho para garantir que as declarações das funções sejam reconhecidas.
-#include "FS.h"
-#include "SD.h"
-#include "SPI.h"
 
 // Definição dos novos pinos SPI para o SD Card
 #define SD_SCK   14  // Clock
 #define SD_MISO  12  // Entrada de dados
 #define SD_MOSI  13  // Saída de dados
 #define SD_CS    27   // Chip Select (ajuste conforme necessário)
-#define SERIAL_BAUD_RATE 115200
+#define SERIAL_BAUD_RATE 9600
 
 // ------------------------------------------------------------
 
 void SD_Card::setup(){
-  Serial.begin(SERIAL_BAUD_RATE);
-  if(!SD.begin(SD_CS)){
-    Serial.println("Falha ao montar o cartão SD");
+Serial.begin(SERIAL_BAUD_RATE);
+  while (!Serial) {
+    delay(10);
+  }
+
+  Serial.println("Inicializando cartao SD com pinos SPI personalizados...");
+
+  // Inicializa o barramento SPI com os novos pinos
+  SPI.begin(SD_SCK, SD_MISO, SD_MOSI, SD_CS);
+
+  if (!SD.begin(SD_CS, SPI)) {
+    Serial.println("Falha na inicializaccao do SD!");
     return;
   }
-  uint8_t cardType = SD.cardType();
-
+  
+  Serial.println("Cartao SD pronto!");
+  
+  uint8_t cardType = SD.cardType();  
+   
   if(cardType == CARD_NONE){
-    Serial.println("Nenhum cartão SD conectado");
+    Serial.println("Nenhum cartao SD conectado");
     return;
+  }
+
+  Serial.print("Tipo do cartao SD: ");
+  if(cardType == CARD_MMC){
+    Serial.println("MMC");
+  } else if(cardType == CARD_SD){
+    Serial.println("SDSC");
+  } else if(cardType == CARD_SDHC){
+    Serial.println("SDHC");
+  } else {
+    Serial.println("DESCONHECIDO");
   }
 
 }
 
 // ------------------------------------------------------------
 
-void SD_Card::lista_Diretorio(fs::FS &fs, const char * dirname, uint8_t levels){
+void SD_Card::lista_Diretorio(const char * dirname, uint8_t levels){
   Serial.printf("Listando diretórios: %s\n", dirname);
 
-  File root = fs.open(dirname);
+  File root = SD.open(dirname);
   if(!root){
     Serial.println("Falha ao abrir diretório");
     return;
   }
   if(!root.isDirectory()){
-    Serial.println("Não é um diretório");
+    Serial.println("Nao é um diretório");
     return;
   }
 
@@ -50,7 +70,7 @@ void SD_Card::lista_Diretorio(fs::FS &fs, const char * dirname, uint8_t levels){
       Serial.print("  PASTA   : ");
       Serial.println(file.name());
       if(levels){
-        lista_Diretorio(fs, file.name(), levels -1);
+        lista_Diretorio(file.name(), levels -1);
       }
     } else {
       Serial.print("  ARQUIVO: ");
@@ -64,9 +84,9 @@ void SD_Card::lista_Diretorio(fs::FS &fs, const char * dirname, uint8_t levels){
 
 // ------------------------------------------------------------
 
-void SD_Card::criando_Diretorio(fs::FS &fs, const char * path){
+void SD_Card::criando_Diretorio(const char * path){
   Serial.printf("Criando diretório: %s\n", path);
-  if(fs.mkdir(path)){
+  if(SD.mkdir(path)){
     Serial.println("Diretório criado");
   } else {
     Serial.println("Falha ao criar diretório");
@@ -75,9 +95,9 @@ void SD_Card::criando_Diretorio(fs::FS &fs, const char * path){
 
 // ------------------------------------------------------------
 
-void SD_Card::apagando_Diretorio(fs::FS &fs, const char * path){
+void SD_Card::apagando_Diretorio(const char * path){
   Serial.printf("Removendo diretório: %s\n", path);
-  if(fs.rmdir(path)){
+  if(SD.rmdir(path)){
     Serial.println("Diretório removido");
   } else {
     Serial.println("Falha ao remover diretório");
@@ -86,10 +106,10 @@ void SD_Card::apagando_Diretorio(fs::FS &fs, const char * path){
 
 // ------------------------------------------------------------
 
-void SD_Card::lendo_Arquivo(fs::FS &fs, const char * path){
+void SD_Card::lendo_Arquivo(const char * path){
   Serial.printf("Lendo arquivo: %s\n", path);
 
-  File file = fs.open(path);
+  File file = SD.open(path);
   if(!file){
     Serial.println("Falha ao abrir arquivo para leitura");
     return;
@@ -104,10 +124,10 @@ void SD_Card::lendo_Arquivo(fs::FS &fs, const char * path){
 
 // ------------------------------------------------------------
 
-void SD_Card::criando_Arquivo(fs::FS &fs, const char * path, const char * message){
+void SD_Card::criando_Arquivo(const char * path, const char * message){
   Serial.printf("Escrevendo arquivo: %s\n", path);
 
-  File file = fs.open(path, FILE_WRITE);
+  File file = SD.open(path, FILE_WRITE);
   if(!file){
     Serial.println("Falha ao abrir arquivo para escrita");
     return;
@@ -123,10 +143,10 @@ void SD_Card::criando_Arquivo(fs::FS &fs, const char * path, const char * messag
 
 // ------------------------------------------------------------
 
-void SD_Card::incrementando_Arquivo(fs::FS &fs, const char * path, const char * message){
+void SD_Card::incrementando_Arquivo(const char * path, const char * message){
   //Serial.printf("Adicionando ao arquivo: %s\n", path);
 
-  File file = fs.open(path, FILE_APPEND);
+  File file = SD.open(path, FILE_APPEND);
   if(!file){
     Serial.println("Falha ao abrir arquivo para adicionar conteúdo");
     return;
@@ -142,9 +162,9 @@ void SD_Card::incrementando_Arquivo(fs::FS &fs, const char * path, const char * 
 
 // ------------------------------------------------------------
 
-void SD_Card::renomeando_Arquivo(fs::FS &fs, const char * path1, const char * path2){
+void SD_Card::renomeando_Arquivo(const char * path1, const char * path2){
   Serial.printf("Renomeando arquivo de %s para %s\n", path1, path2);
-  if (fs.rename(path1, path2)) {
+  if (SD.rename(path1, path2)) {
     Serial.println("Arquivo renomeado");
   } else {
     Serial.println("Falha ao renomear arquivo");
@@ -153,9 +173,9 @@ void SD_Card::renomeando_Arquivo(fs::FS &fs, const char * path1, const char * pa
 
 // ------------------------------------------------------------
 
-void SD_Card::deletando_arquivo(fs::FS &fs, const char * path){
+void SD_Card::deletando_arquivo(const char * path){
   Serial.printf("Deletando arquivo: %s\n", path);
-  if(fs.remove(path)){
+  if(SD.remove(path)){
     Serial.println("Arquivo deletado");
   } else {
     Serial.println("Falha ao deletar arquivo");
@@ -164,8 +184,8 @@ void SD_Card::deletando_arquivo(fs::FS &fs, const char * path){
 
 // ------------------------------------------------------------
 
-void SD_Card::teste_Geral(fs::FS &fs, const char * path){
-  File file = fs.open(path);
+void SD_Card::teste_Geral(const char * path){
+  File file = SD.open(path);
   static uint8_t buf[512];
   size_t len = 0;
   uint32_t start = millis();
@@ -189,7 +209,7 @@ void SD_Card::teste_Geral(fs::FS &fs, const char * path){
     Serial.println("Falha ao abrir arquivo para leitura");
   }
 
-  file = fs.open(path, FILE_WRITE);
+  file = SD.open(path, FILE_WRITE);
   if(!file){
     Serial.println("Falha ao abrir arquivo para escrita");
     return;
@@ -207,7 +227,7 @@ void SD_Card::teste_Geral(fs::FS &fs, const char * path){
 
 // ------------------------------------------------------------
 
-void SD_Card::armazenamento_Geral(fs::FS &fs){
-    Serial.printf("Espaço total: %lluMB\n", SD.totalBytes() / (1024 * 1024));
-    Serial.printf("Espaço usado: %lluMB\n", SD.usedBytes() / (1024 * 1024));
+void SD_Card::armazenamento_Geral(){
+    Serial.printf("Espaco total: %lluMB\n", SD.totalBytes() / (1024 * 1024));
+    Serial.printf("Espaco usado: %lluMB\n", SD.usedBytes() / (1024 * 1024));
 }
