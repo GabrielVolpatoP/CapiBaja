@@ -51,7 +51,7 @@ Serial.begin(SERIAL_BAUD_RATE);
 
 // ------------------------------------------------------------
 
-void SD_Card::lista_Diretorio(const char * dirname, uint8_t levels){
+void SD_Card::listaDiretorio(const char * dirname, uint8_t levels){
   Serial.printf("Listando diretórios: %s\n", dirname);
 
   File root = SD.open(dirname);
@@ -84,7 +84,7 @@ void SD_Card::lista_Diretorio(const char * dirname, uint8_t levels){
 
 // ------------------------------------------------------------
 
-void SD_Card::criando_Diretorio(const char * path){
+void SD_Card::criandoDiretorio(const char * path){
   Serial.printf("Criando diretório: %s\n", path);
   if(SD.mkdir(path)){
     Serial.println("Diretório criado");
@@ -95,7 +95,7 @@ void SD_Card::criando_Diretorio(const char * path){
 
 // ------------------------------------------------------------
 
-void SD_Card::apagando_Diretorio(const char * path){
+void SD_Card::apagandoDiretorio(const char * path){
   Serial.printf("Removendo diretório: %s\n", path);
   if(SD.rmdir(path)){
     Serial.println("Diretório removido");
@@ -106,7 +106,7 @@ void SD_Card::apagando_Diretorio(const char * path){
 
 // ------------------------------------------------------------
 
-void SD_Card::lendo_Arquivo(const char * path){
+void SD_Card::lendoArquivo(const char * path){
   Serial.printf("Lendo arquivo: %s\n", path);
 
   File file = SD.open(path);
@@ -124,7 +124,7 @@ void SD_Card::lendo_Arquivo(const char * path){
 
 // ------------------------------------------------------------
 
-void SD_Card::criando_Arquivo(const char * path, const char * message){
+void SD_Card::criandoArquivo(const char * path, const char * message){
   Serial.printf("Escrevendo arquivo: %s\n", path);
 
   File file = SD.open(path, FILE_WRITE);
@@ -143,7 +143,7 @@ void SD_Card::criando_Arquivo(const char * path, const char * message){
 
 // ------------------------------------------------------------
 
-void SD_Card::incrementando_Arquivo(const char * path, const char * message){
+void SD_Card::incrementandoArquivo(const char * path, const char * message){
   //Serial.printf("Adicionando ao arquivo: %s\n", path);
 
   File file = SD.open(path, FILE_APPEND);
@@ -162,7 +162,7 @@ void SD_Card::incrementando_Arquivo(const char * path, const char * message){
 
 // ------------------------------------------------------------
 
-void SD_Card::renomeando_Arquivo(const char * path1, const char * path2){
+void SD_Card::renomeandoArquivo(const char * path1, const char * path2){
   Serial.printf("Renomeando arquivo de %s para %s\n", path1, path2);
   if (SD.rename(path1, path2)) {
     Serial.println("Arquivo renomeado");
@@ -173,7 +173,7 @@ void SD_Card::renomeando_Arquivo(const char * path1, const char * path2){
 
 // ------------------------------------------------------------
 
-void SD_Card::deletando_arquivo(const char * path){
+void SD_Card::deletandoArquivo(const char * path){
   Serial.printf("Deletando arquivo: %s\n", path);
   if(SD.remove(path)){
     Serial.println("Arquivo deletado");
@@ -184,7 +184,7 @@ void SD_Card::deletando_arquivo(const char * path){
 
 // ------------------------------------------------------------
 
-void SD_Card::teste_Geral(const char * path){
+void SD_Card::testeGeral(const char * path){
   File file = SD.open(path);
   static uint8_t buf[512];
   size_t len = 0;
@@ -227,7 +227,7 @@ void SD_Card::teste_Geral(const char * path){
 
 // ------------------------------------------------------------
 
-void SD_Card::armazenamento_Geral(){
+void SD_Card::armazenamentoGeral(){
     Serial.printf("Espaco total: %lluMB\n", SD.totalBytes() / (1024 * 1024));
     Serial.printf("Espaco usado: %lluMB\n", SD.usedBytes() / (1024 * 1024));
 }
