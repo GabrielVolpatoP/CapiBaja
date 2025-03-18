@@ -44,4 +44,4 @@ Este projeto está licenciado sob a [MIT License](LICENSE).
 
 ## Contato
 Para suporte ou dúvidas, entre em contato pelo email: volpatocursin@outlook.com 
-<img src="https://github.com/GabrielVolpatoP/GabrielVolpatoP/blob/main/imagens/assinatura-icon.png?raw=true" alt="Icon Usuario" align="right"  width="60">
+<img src="https://github.com/GabrielVolpatoP/GabrielVolpatoP/blob/main/imagens/Duck__icon.svg?raw=true" alt="Icon Usuario" align="right"  width="60">
