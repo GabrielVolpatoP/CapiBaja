@@ -7,12 +7,11 @@
 #define SD_MISO  12  // Entrada de dados
 #define SD_MOSI  13  // Saída de dados
 #define SD_CS    27   // Chip Select (ajuste conforme necessário)
-#define SERIAL_BAUD_RATE 9600
 
 // ------------------------------------------------------------
 
 void SD_Card::setup(){
-Serial.begin(SERIAL_BAUD_RATE);
+
   while (!Serial) {
     delay(10);
   }
@@ -70,7 +69,7 @@ void SD_Card::listaDiretorio(const char * dirname, uint8_t levels){
       Serial.print("  PASTA   : ");
       Serial.println(file.name());
       if(levels){
-        lista_Diretorio(file.name(), levels -1);
+        listaDiretorio(file.name(), levels -1);
       }
     } else {
       Serial.print("  ARQUIVO: ");
@@ -115,7 +114,7 @@ void SD_Card::lendoArquivo(const char * path){
     return;
   }
 
-  Serial.print("Conteúdo do arquivo: ");
+  Serial.print("Conteúdo do arquivo: \n");
   while(file.available()){
     Serial.write(file.read());
   }
