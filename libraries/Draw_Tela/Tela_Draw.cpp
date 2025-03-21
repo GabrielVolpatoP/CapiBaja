@@ -8,8 +8,6 @@ U8G2_ST7920_128X64_F_SW_SPI u8g2(U8G2_R0, /* clock=*/ 18, /* data=*/ 23, /* CS=*
 
 void Tela_Draw::setup() {
     u8g2.begin();
-	iconsPrincipal();        // Desenha os icones de Status
-	backgrondTela();
 }
 
 // ------------------------------------------------------------
@@ -21,6 +19,7 @@ void Tela_Draw::limparTela(){
 // ------------------------------------------------------------
 
 void Tela_Draw::desenharTela(){
+	backgrondTela();
 	u8g2.sendBuffer();
 }
 
@@ -40,15 +39,17 @@ void Tela_Draw::atulizacaoTela(SensorData* sensorData) {
  
   // ----- Correção (Retangulo Temperatura)
   u8g2.drawFrame(66, 0, 2, 21);   // "linha" horiz sup - correção
+  
+  iconsPrincipal(sensorData);
 }
 
 // ------------------------------------------------------------
 
-void Tela_Draw::iconsPrincipal() {  // Chama todos os elementos dos icones
-  iconFarol();     // Chama função que printa Farol
-  iconLora();      // Chama função que printa Lora
-  iconBateria();   // Chama função que printa Bateria
-  iconGasolina();  // Chama função que printa Gasolina
+void Tela_Draw::iconsPrincipal(SensorData* sensorData) {  // Chama todos os elementos dos icones
+  iconFarol(sensorData->farol);     // Chama função que printa Farol
+  iconLora(sensorData->conct_LAN);      // Chama função que printa Lora
+  iconBateria(sensorData->batteryLevel);   // Chama função que printa Bateria
+  iconGasolina(sensorData->high_gas);  // Chama função que printa Gasolina
 }
 
 // ------------------------------------------------------------
@@ -84,28 +85,31 @@ void Tela_Draw::backgrondTela() {
 
 // ------------------------------------------------------------
 
-void Tela_Draw::iconFarol() {
+void Tela_Draw::iconFarol(bool farol) {
 
   u8g2.drawTriangle(119, 5, 119, 15, 124, 10);  // method to build a triangle. This method accepts as arguments the coordinates of each corner and the WHITE.
 
   // ===================== Condicional =====================
-  u8g2.drawLine(114, 7, 117, 7);    // method to create a line
-  u8g2.drawLine(114, 10, 117, 10);  // method to create a line
-  u8g2.drawLine(114, 13, 117, 13);  // method to create a line
+  if(farol){
+	  u8g2.drawLine(114, 7, 117, 7);    // method to create a line
+	  u8g2.drawLine(114, 10, 117, 10);  // method to create a line
+	  u8g2.drawLine(114, 13, 117, 13);  // method to create a line
+  }
 }
 
 // ------------------------------------------------------------
 
-void Tela_Draw::iconLora() {
+void Tela_Draw::iconLora(bool conct_LAN) {
 
-  u8g2.drawLine(115, 20, 122, 20);  // method to create a line
-  u8g2.drawPixel(114, 21);          // plot a pixel in the x,y coordinates
-  u8g2.drawPixel(123, 21);          // plot a pixel in the x,y coordinates
+	if(conct_LAN){
+		u8g2.drawLine(115, 20, 122, 20);  // method to create a line
+		u8g2.drawPixel(114, 21);          // plot a pixel in the x,y coordinates
+		u8g2.drawPixel(123, 21);          // plot a pixel in the x,y coordinates
 
-  u8g2.drawLine(116, 22, 121, 22);  // method to create a line
-  u8g2.drawPixel(115, 23);          // plot a pixel in the x,y coordinates
-  u8g2.drawPixel(122, 23);          // plot a pixel in the x,y coordinates
-
+		u8g2.drawLine(116, 22, 121, 22);  // method to create a line
+		u8g2.drawPixel(115, 23);          // plot a pixel in the x,y coordinates
+		u8g2.drawPixel(122, 23);          // plot a pixel in the x,y coordinates
+	}
   u8g2.drawLine(117, 24, 120, 24);  // method to create a line
   u8g2.drawPixel(116, 25);          // plot a pixel in the x,y coordinates
   u8g2.drawPixel(121, 25);          // plot a pixel in the x,y coordinates
@@ -115,18 +119,20 @@ void Tela_Draw::iconLora() {
 
 // ------------------------------------------------------------
 
-void Tela_Draw::iconBateria() {
+void Tela_Draw::iconBateria(bool batteryLevel) {
 
   u8g2.drawFrame(117, 32, 4, 2);   // provides an easy way to draw a rectangle
   u8g2.drawFrame(115, 34, 8, 10);  // provides an easy way to draw a rectangle
 
   // ===================== Condicional =====================
-  u8g2.drawBox(117, 36, 4, 6);  // provides an easy way to draw a rectangle
+  if(batteryLevel){
+	u8g2.drawBox(117, 36, 4, 6);  // provides an easy way to draw a rectangle
+  }
 }
 
 // ------------------------------------------------------------
 
-void Tela_Draw::iconGasolina() {
+void Tela_Draw::iconGasolina(bool high_gas) {
 
   u8g2.drawFrame(115, 50, 7, 9);    // provides an easy way to draw a rectangle
   u8g2.drawLine(114, 48, 118, 48);  // method to create a line
@@ -136,7 +142,9 @@ void Tela_Draw::iconGasolina() {
   u8g2.drawPixel(124, 51);          // plot a pixel in the x,y coordinates
 
   // ===================== Condicional =====================
-  u8g2.drawBox(117, 52, 3, 5);  // provides an easy way to draw a rectangle
+ if(high_gas){
+	u8g2.drawBox(117, 52, 3, 5);  // provides an easy way to draw a rectangle
+ }
 }
 
 // ------------------------------------------------------------
