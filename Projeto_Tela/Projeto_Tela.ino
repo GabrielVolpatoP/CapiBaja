@@ -15,7 +15,7 @@ void setup() {
   Serial.begin(SERIAL_BAUD_RATE);  // inicializa a comunicação serial
   tela.setup();                    // Inicializando o display
   //tela.desenharTela();
-  card.setup();                     // Inicializando o SD Card
+  card.setup();  // Inicializando o SD Card
   //card.criandoDiretorio("/Teste");  // Cria uma pasta no SD
   card.criandoArquivo("/Teste/teste.csv", "buffer_star1, buffer_star2, latitude, longitude, temperatura_motor, temperatura_cvt, velocidade, odometro, hora, minuto, mes, ano, altitude, rpm_motor, batteryLevel, farol, conct_LAN, low_gas, high_gas, buffer_end1, buffer_end2");
   card.lendoArquivo("/Teste/teste.csv");
@@ -53,7 +53,9 @@ void randomicString(char* buffer) {
           data.buffer_end1, data.buffer_end2);
 }
 
+
 void loop() {
+  tela.limparTela();
   // Simulando a recepção de dados
   randomicString(dados);
   //char *dataString = dataFunction.sensorDataToString(&data);
@@ -61,5 +63,5 @@ void loop() {
   card.lendoArquivo("/Teste/teste.csv");                 // Le a informação do Arquivo renomeado
   tela.atulizacaoTela(&data);
   tela.desenharTela();
-  delay(2000);
+  delay(3000);
 }
